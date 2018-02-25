@@ -7,7 +7,8 @@ const fs = require('fs');
 const RSS = require('rss');
 
 var hashedPassword;
-var xml;
+var rssxml;
+var rssjson = [];
 
 fs.readFile(path.join(__dirname, 'password'), 'utf8', (err, data) => {
     if (err) throw err;
@@ -20,7 +21,15 @@ var feed = new RSS({
     site_url: 'http://localhost:3000',
 });
 
-xml = feed.xml();
+try {
+    oldRSS = require('./rss.json');
+    addAllItems(oldRSS);
+} catch (err) {
+    console.log(err);
+    writeJSON();
+    rssxml = feed.xml();
+}
+
 
 app.use('/', express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({
@@ -28,7 +37,7 @@ app.use(bodyParser.urlencoded({
 }));
 app.post('/', feedHandler);
 app.get('/feed.rss', (req, res) => {
-    res.end(xml);
+    res.end(rssxml);
 });
 
 app.listen(3000, () => {
@@ -47,14 +56,29 @@ function feedHandler(req, res) {
 }
 
 function addRSS(title, description, expirationDate) {
-    feed.item({
+    var item = {
         title,
         description,
         date: Date.now(),
         url: '',
         guid: uuidv4(),
-    });
-    xml = feed.xml();
+    }
+    addRSSItem(item);
+}
+
+function addRSSItem(item) {
+    addAllItems([item]);
+}
+
+function addAllItems(items) {
+    console.log('addall ' + items);
+    for(item of items) {
+        console.log('pushing ' + JSON.stringify(item));
+        rssjson.push(item);
+        feed.item(item);
+    }
+    rssxml = feed.xml();
+    writeJSON();
 }
 
 function uuidv4() { // https://stackoverflow.com/a/2117523/2846923
@@ -62,5 +86,12 @@ function uuidv4() { // https://stackoverflow.com/a/2117523/2846923
         var r = Math.random() * 16 | 0,
             v = c == 'x' ? r : (r & 0x3 | 0x8);
         return v.toString(16);
+    });
+}
+
+function writeJSON() {
+    console.log(`writing '${rssjson}' as '${JSON.stringify(rssjson)}'`);
+    fs.writeFile(path.join(__dirname, 'rss.json'), JSON.stringify(rssjson), (err) => {
+        if (err) console.log(err);
     });
 }
