@@ -5,6 +5,7 @@ const app = express();
 const crypto = require('crypto');
 const fs = require('fs');
 const RSS = require('rss');
+const cors = require('cors');
 
 var hashedPassword;
 var rssxml;
@@ -30,7 +31,7 @@ try {
     rssxml = feed.xml();
 }
 
-
+app.use(cors());
 app.use('/', express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({
     extended: false
@@ -38,6 +39,9 @@ app.use(bodyParser.urlencoded({
 app.post('/', feedHandler);
 app.get('/feed.rss', (req, res) => {
     res.end(rssxml);
+});
+app.get('/feed.json', (req, res) => {
+    res.json(rssjson);
 });
 
 app.listen(3000, () => {
@@ -60,6 +64,7 @@ function addRSS(title, description, expirationDate) {
         title,
         description,
         date: Date.now(),
+        expirationDate,
         url: '',
         guid: uuidv4(),
     }
