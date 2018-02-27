@@ -7,14 +7,8 @@ const fs = require('fs');
 const RSS = require('rss');
 const cors = require('cors');
 
-var hashedPassword;
 var rssxml;
 var rssjson = [];
-
-fs.readFile(path.join(__dirname, 'password'), 'utf8', (err, data) => {
-    if (err) throw err;
-    hashedPassword = data;
-});
 
 var feed = new RSS({
     title: 'Honors TV News',
@@ -49,12 +43,6 @@ app.listen(3000, () => {
 });
 
 function feedHandler(req, res) {
-    var hash = crypto.createHash('sha256');
-    hash.update(req.body.password);
-    if (hash.digest('hex') != hashedPassword) {
-        res.sendStatus(403);
-        return;
-    }
     addRSS(req.body.title, req.body.description, req.body.date);
     res.redirect('/');
 }
