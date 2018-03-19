@@ -8,7 +8,7 @@ const RSS = require('rss');
 const cors = require('cors');
 
 var rssxml;
-var rssjson = [];
+//var rssjson = [];
 
 var feed = new RSS({
     title: 'Honors TV News',
@@ -17,11 +17,11 @@ var feed = new RSS({
 });
 
 try {
-    oldRSS = require('./rss.json');
-    addAllItems(oldRSS);
+    db = require('./db.json');
+    addAllItems(db.select_all());
 } catch (err) {
     console.log(err);
-    writeJSON();
+    //writeJSON();
     rssxml = feed.xml();
 }
 
@@ -34,9 +34,9 @@ app.post('/', feedHandler);
 app.get('/feed.rss', (req, res) => {
     res.end(rssxml);
 });
-app.get('/feed.json', (req, res) => {
+/*app.get('/feed.json', (req, res) => {
     res.json(rssjson);
-});
+});*/
 
 app.listen(3000, () => {
     console.log('listening at http://localhost:3000');
@@ -55,6 +55,7 @@ function addRSS(title, description, expirationDate) {
         expirationDate,
         url: '',
         guid: uuidv4(),
+		author: "test author",
     }
     addRSSItem(item);
 }
@@ -67,11 +68,11 @@ function addAllItems(items) {
     console.log('addall ' + items);
     for(item of items) {
         console.log('pushing ' + JSON.stringify(item));
-        rssjson.push(item);
+        db.insert(item);
         feed.item(item);
     }
     rssxml = feed.xml();
-    writeJSON();
+    //writeJSON();
 }
 
 function uuidv4() { // https://stackoverflow.com/a/2117523/2846923
