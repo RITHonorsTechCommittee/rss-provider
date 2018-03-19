@@ -11,7 +11,14 @@
 </head>
 
 <body>
-    <form class="pure-form pure-form-stacked" action="/" method="POST">
+    <div id="rss-item-list" class="content-column">
+        {{#items}}
+        <div>
+            {{description}}
+        </div>
+        {{/items}}
+    </div>
+    <form class="content-column pure-form pure-form-stacked" action="/" method="POST">
         <fieldset>
             <legend>Add RSS Item</legend>
             <label for="title">Title</label>

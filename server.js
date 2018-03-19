@@ -6,6 +6,7 @@ const crypto = require('crypto');
 const fs = require('fs');
 const RSS = require('rss');
 const cors = require('cors');
+const mustache = require('mustache');
 
 var hashedPassword;
 var rssxml;
