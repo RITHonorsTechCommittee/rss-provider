@@ -1,7 +1,26 @@
 body {
-    padding: 10%;
+    padding: 0;
+    background-color: #f5813d;
 }
 
-input {
-    min-width: 50%;
+input, textarea {
+    width: 100%;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.content-column {
+    padding: 2rem;
+}
+
+.rss-item {
+    margin-bottom: 1em;
+}
+
+.delete-button.pure-button {
+    background: rgb(202, 60, 60);
+    color: white;
+    padding: 1px 6px;
 }

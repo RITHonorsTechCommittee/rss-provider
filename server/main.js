@@ -7,6 +7,7 @@ const fs = require('fs');
 const RSS = require('rss');
 const cors = require('cors');
 const db = require('./db.js');
+const Mustache = require('mustache');
 
 var rssxml;
 //var rssjson = [];
@@ -26,6 +27,7 @@ try {
 }
 
 app.use(cors());
+app.get('/', pageServer);
 app.use('/', express.static(path.join(__dirname, '..', 'client')));
 app.use(bodyParser.urlencoded({
     extended: false
@@ -42,6 +44,16 @@ app.get('/feed.rss', (req, res) => {
 app.listen(3000, () => {
     console.log('listening at http://localhost:3000');
 });
+
+function pageServer(req, res) {
+    fs.readFile(path.join(__dirname, 'public', 'index.html'), 'utf8', (err, data) => {
+        if (err) {
+            console.error(err);
+            return;
+        }
+        res.end(Mustache.render(data, { items: rssjson }));
+    });
+}
 
 function feedHandler(req, res) {
     addRSS(req.body.title, req.body.description, req.body.date);

@@ -10,21 +10,26 @@
     <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
 </head>
 
-<body>
-    <form class="pure-form pure-form-stacked" action="/" method="POST">
+<body class="pure-g">
+    <form class="pure-u-1-2 content-column pure-form pure-form-stacked" action="/" method="POST">
         <fieldset>
             <legend>Add RSS Item</legend>
             <label for="title">Title</label>
             <input id="title" name="title" type="text" placeholder="title">
             <label for="description">Description</label>
-            <input id="description" name="description" type="text" placeholder="description">
+            <textarea id="description" name="description" type="text" placeholder="description"></textarea>
             <label for="date">Expiration date</label>
             <input id="date" name="date" type="date" placeholder="date">
-            <label for="password">Password</label>
-            <input id="password" name="password" type="password" placeholder="password">
             <button type="submit" class="pure-button pure-button-primary">Submit</button>
         </fieldset>
     </form>
+    <div id="rss-item-list" class="pure-u-1-2 content-column">
+        {{#items}}
+        <div class="rss-item">
+            <button class="delete-button pure-button" onclick="deleteItem('{{guid}}')">×</button> {{title}}
+        </div>
+        {{/items}}
+    </div>
 </body>
 
 </html>
