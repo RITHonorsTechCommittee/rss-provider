@@ -6,7 +6,7 @@ const crypto = require('crypto');
 const fs = require('fs');
 const RSS = require('rss');
 const cors = require('cors');
-const mustache = require('mustache');
+const Mustache = require('mustache');
 
 var hashedPassword;
 var rssxml;
@@ -33,6 +33,7 @@ try {
 }
 
 app.use(cors());
+app.get('/', pageServer);
 app.use('/', express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({
     extended: false
@@ -49,13 +50,23 @@ app.listen(3000, () => {
     console.log('listening at http://localhost:3000');
 });
 
+function pageServer(req, res) {
+    fs.readFile(path.join(__dirname, 'public', 'index.html'), 'utf8', (err, data) => {
+        if (err) {
+            console.error(err);
+            return;
+        }
+        res.end(Mustache.render(data, { items: rssjson }));
+    });
+}
+
 function feedHandler(req, res) {
-    var hash = crypto.createHash('sha256');
+    /*var hash = crypto.createHash('sha256');
     hash.update(req.body.password);
     if (hash.digest('hex') != hashedPassword) {
         res.sendStatus(403);
         return;
-    }
+    }*/
     addRSS(req.body.title, req.body.description, req.body.date);
     res.redirect('/');
 }

@@ -1,11 +1,10 @@
 body {
     padding: 0;
-    display: flex;
-    flex-direction: row;
+    background-color: #f5813d;
 }
 
-input {
-    min-width: 50%;
+input, textarea {
+    width: 100%;
 }
 
 * {
@@ -13,6 +12,15 @@ input {
 }
 
 .content-column {
-    flex: 1 1 0;
     padding: 2rem;
+}
+
+.rss-item {
+    margin-bottom: 1em;
+}
+
+.delete-button.pure-button {
+    background: rgb(202, 60, 60);
+    color: white;
+    padding: 1px 6px;
 }
