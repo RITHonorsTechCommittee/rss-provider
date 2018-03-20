@@ -24,7 +24,7 @@ var final_result;
 MongoClient.connect(url, function(err, db) {
   if (err) throw err; // Ensures it is connected 
   var dbo = db.db("RSSFeed"); // Opens database
-  dbo.collection("RSSData").find({}).project({_id: 0}).toArray(function(err, result) { // Finds all items in collection, excludes id field, and turns to array
+  dbo.collection("RSSData").find({}).toArray(function(err, result) { // Finds all items in collection, excludes id field, and turns to array
     if (err) throw err;
     console.log(result); // Prints results
 	final_result = result;
@@ -43,8 +43,8 @@ var url = "mongodb://localhost:27017/";
 MongoClient.connect(url, function(err, db) {
   if (err) throw err;
   var dbo = db.db("RSSFeed"); // Opens database
-  var deleteQuerry = {'id': id} // Deletes any articles with the id
-  dbo.collection("RSSData").deleteMany(deleteQuerry, function(err, res) { // Executes querry
+  var deleteQuerry = {'_id': id} // Deletes any articles with the id
+  dbo.collection("RSSData").deleteOne(deleteQuerry, function(err, res) { // Executes querry
     if (err) throw err;
     console.log(res.result.n + " document(s) deleted");
     db.close();
