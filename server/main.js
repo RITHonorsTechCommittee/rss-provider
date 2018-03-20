@@ -6,6 +6,7 @@ const crypto = require('crypto');
 const fs = require('fs');
 const RSS = require('rss');
 const cors = require('cors');
+const db = require('./db.js');
 
 var rssxml;
 //var rssjson = [];
@@ -17,7 +18,6 @@ var feed = new RSS({
 });
 
 try {
-    db = require('./db.json');
     addAllItems(db.select_all());
 } catch (err) {
     console.log(err);
@@ -31,6 +31,7 @@ app.use(bodyParser.urlencoded({
     extended: false
 }));
 app.post('/', feedHandler);
+app.post('/delete', deleter);
 app.get('/feed.rss', (req, res) => {
     res.end(rssxml);
 });
@@ -44,6 +45,11 @@ app.listen(3000, () => {
 
 function feedHandler(req, res) {
     addRSS(req.body.title, req.body.description, req.body.date);
+    res.redirect('/');
+}
+
+function deleter(req, res) {
+    db.delete_item(req.body.item_id);
     res.redirect('/');
 }
 

@@ -1,4 +1,5 @@
-function  insert(item) {
+// Insert the item, , return true on success, false otherwise
+exports.insert = function (item) {
 	var MongoClient = require('mongodb').MongoClient;
 	var url = "mongodb://localhost:27017/";
 
@@ -12,9 +13,10 @@ function  insert(item) {
 		db.close();
 	  });
 	});
-}
+};
 
-function  select_all() {
+// Returns all items in an array, including an ID; also make a function to return within a date range
+exports.select_all = function  () {
 	var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost:27017/";
 var final_result;
@@ -31,4 +33,21 @@ MongoClient.connect(url, function(err, db) {
 });
 
 return final_result;
-}
+};
+
+// Delete the item with the specific ID, return true on success, false otherwise
+exports.delete_item = function  (id) {
+var MongoClient = require('mongodb').MongoClient;
+var url = "mongodb://localhost:27017/";
+
+MongoClient.connect(url, function(err, db) {
+  if (err) throw err;
+  var dbo = db.db("RSSFeed"); // Opens database
+  var deleteQuerry = {'id': id} // Deletes any articles with the id
+  dbo.collection("RSSData").deleteMany(deleteQuerry, function(err, res) { // Executes querry
+    if (err) throw err;
+    console.log(res.result.n + " document(s) deleted");
+    db.close();
+  });
+});
+};
