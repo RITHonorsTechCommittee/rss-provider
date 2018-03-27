@@ -32,7 +32,7 @@ app.use('/', express.static(path.join(__dirname, '..', 'client')));
 app.use(bodyParser.urlencoded({
     extended: false
 }));
-app.post('/', feedHandler);
+app.post('/add', feedHandler);
 app.post('/delete', deleter);
 app.get('/feed.rss', (req, res) => {
     res.end(rssxml);
