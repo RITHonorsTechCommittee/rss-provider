@@ -10,7 +10,7 @@ const db = require('./db.js');
 const Mustache = require('mustache');
 
 var rssxml;
-//var rssjson = [];
+var rssjson = [];
 
 var feed = new RSS({
     title: 'Honors TV News',
@@ -46,7 +46,7 @@ app.listen(3000, () => {
 });
 
 function pageServer(req, res) {
-    fs.readFile(path.join(__dirname, 'public', 'index.html'), 'utf8', (err, data) => {
+    fs.readFile(path.join(__dirname, '..', 'client', 'index.html'), 'utf8', (err, data) => {
         if (err) {
             console.error(err);
             return;
@@ -72,7 +72,6 @@ function addRSS(title, description, expirationDate) {
         date: Date.now(),
         expirationDate,
         url: '',
-        guid: uuidv4(),
 		author: "test author",
     }
     addRSSItem(item);
@@ -91,14 +90,6 @@ function addAllItems(items) {
     }
     rssxml = feed.xml();
     //writeJSON();
-}
-
-function uuidv4() { // https://stackoverflow.com/a/2117523/2846923
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-        var r = Math.random() * 16 | 0,
-            v = c == 'x' ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
-    });
 }
 
 function writeJSON() {
