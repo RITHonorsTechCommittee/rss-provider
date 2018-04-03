@@ -56,7 +56,7 @@ function pageServer(req, res) {
 }
 
 function feedHandler(req, res) {
-    addRSS(req.body.title, req.body.description, req.body.date);
+    addRSS(req.body.title, req.body.author, req.body.description, req.body.date);
     res.redirect('/');
 }
 
@@ -65,14 +65,14 @@ function deleter(req, res) {
     res.redirect('/');
 }
 
-function addRSS(title, description, expirationDate) {
+function addRSS(title, author, description, expirationDate) {
     var item = {
         title,
         description,
         date: Date.now(),
         expirationDate,
         url: '',
-		author: "test author",
+		author: author,
     }
     addRSSItem(item);
 }

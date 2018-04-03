@@ -15,18 +15,20 @@
         <fieldset>
             <legend>Add RSS Item</legend>
             <label for="title">Title</label>
-            <input id="title" name="title" type="text" placeholder="title">
+            <input id="title" name="title" type="text" placeholder="title" required />
+			<label for="author">Author</label>
+            <input id="author" name="author" type="text" placeholder="author" required />
             <label for="description">Description</label>
-            <textarea id="description" name="description" type="text" placeholder="description"></textarea>
+            <textarea id="description" name="description" type="text" placeholder="description" required></textarea>
             <label for="date">Expiration date</label>
-            <input id="date" name="date" type="date" placeholder="date">
+            <input id="date" name="date" type="date" placeholder="date" required />
             <button type="submit" class="pure-button pure-button-primary">Submit</button>
         </fieldset>
     </form>
     <div id="rss-item-list" class="pure-u-1-2 content-column">
         {{#items}}
         <div class="rss-item">
-            <button class="delete-button pure-button" onclick="deleteItem('{{guid}}')">×</button> {{title}}
+            <button class="delete-button pure-button" onclick="deleteItem('{{id}}')">×</button> {{title}}
         </div>
         {{/items}}
     </div>
