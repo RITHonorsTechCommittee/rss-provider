@@ -18,32 +18,34 @@ var feed = new RSS({
     site_url: 'http://localhost:3000',
 });
 
-try {
-    addAllItems(db.select_all());
-} catch (err) {
-    console.log(err);
-    //writeJSON();
-    rssxml = feed.xml();
-}
+(async () => {
+    try {
+        addAllItems(await db.select_all());
+    } catch (err) {
+        console.log(err);
+        //writeJSON();
+        rssxml = feed.xml();
+    }
 
-app.use(cors());
-app.get('/', pageServer);
-app.use('/', express.static(path.join(__dirname, '..', 'client')));
-app.use(bodyParser.urlencoded({
-    extended: false
-}));
-app.post('/', feedHandler);
-app.post('/delete', deleter);
-app.get('/feed.rss', (req, res) => {
-    res.end(rssxml);
-});
-/*app.get('/feed.json', (req, res) => {
-    res.json(rssjson);
-});*/
+    app.use(cors());
+    app.get('/', pageServer);
+    app.use('/', express.static(path.join(__dirname, '..', 'client')));
+    app.use(bodyParser.urlencoded({
+        extended: false
+    }));
+    app.post('/', feedHandler);
+    app.post('/delete', deleter);
+    app.get('/feed.rss', (req, res) => {
+        res.end(rssxml);
+    });
+    /*app.get('/feed.json', (req, res) => {
+        res.json(rssjson);
+    });*/
 
-app.listen(3000, () => {
-    console.log('listening at http://localhost:3000');
-});
+    app.listen(3000, () => {
+        console.log('listening at http://localhost:3000');
+    });
+})();
 
 function pageServer(req, res) {
     fs.readFile(path.join(__dirname, '..', 'client', 'index.html'), 'utf8', (err, data) => {
