@@ -27,13 +27,14 @@ var feed = new RSS({
         rssxml = feed.xml();
     }
 
+
     app.use(cors());
     app.get('/', pageServer);
     app.use('/', express.static(path.join(__dirname, '..', 'client')));
     app.use(bodyParser.urlencoded({
         extended: false
     }));
-    app.post('/', feedHandler);
+    app.post('/add', feedHandler);
     app.post('/delete', deleter);
     app.get('/feed.rss', (req, res) => {
         res.end(rssxml);
@@ -58,7 +59,7 @@ function pageServer(req, res) {
 }
 
 function feedHandler(req, res) {
-    addRSS(req.body.title, req.body.description, req.body.date);
+    addRSS(req.body.title, req.body.author, req.body.description, req.body.date);
     res.redirect('/');
 }
 
@@ -67,14 +68,14 @@ function deleter(req, res) {
     res.redirect('/');
 }
 
-function addRSS(title, description, expirationDate) {
+function addRSS(title, author, description, expirationDate) {
     var item = {
         title,
         description,
         date: Date.now(),
         expirationDate,
         url: '',
-		author: "test author",
+		author: author,
     }
     addRSSItem(item);
 }
