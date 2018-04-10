@@ -1,4 +1,5 @@
 var MongoClient = require('mongodb').MongoClient;
+var ObjectId = require('mongodb').ObjectId; 
 var url = "mongodb://localhost:27017/";
 var db_name = "RssFeed";
 var collection_name = "RssData";
@@ -38,7 +39,7 @@ exports.delete_item = function (id) {
 	MongoClient.connect(url, function(err, db) {
 		if (err) throw err;
 		var dbo = db.db(db_name); // Opens database
-		var deleteQuerry = {'_id': id} // Deletes any articles with the id
+		var deleteQuerry = {_id: ObjectId(id)} // Deletes any articles with the id
 		dbo.collection(collection_name).deleteOne(deleteQuerry, function(err, res) { // Executes querry
 			if (err) throw err;
 			console.log(res.result.n + " document(s) deleted");
