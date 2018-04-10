@@ -81,14 +81,16 @@ function addRSS(title, author, description, expirationDate) {
 }
 
 function addRSSItem(item) {
-    addAllItems([item]);
+    console.log('pushing ' + JSON.stringify(item));
+    db.insert(item);
+	rssjson.push(item)
+	feed.item(item);
 }
 
 function addAllItems(items) {
     console.log('addall ' + items);
     for(item of items) {
-        console.log('pushing ' + JSON.stringify(item));
-        db.insert(item);
+		rssjson.push(item)
         feed.item(item);
     }
     rssxml = feed.xml();
