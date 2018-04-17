@@ -31,11 +31,8 @@ var feed = new RSS({
     app.use(cors());
     app.get('/', pageServer);
     app.use('/', express.static(path.join(__dirname, '..', 'client')));
-    app.use(bodyParser.urlencoded({
-        extended: false
-    }));
     app.post('/add', feedHandler);
-    app.post('/delete', deleter);
+    app.post('/delete/:id', deleter);
     app.get('/feed.rss', (req, res) => {
         res.end(rssxml);
     });
@@ -64,7 +61,7 @@ function feedHandler(req, res) {
 }
 
 function deleter(req, res) {
-    db.delete_item(req.body.item_id);
+    db.delete_item(req.params.id);
     res.redirect('/');
 }
 

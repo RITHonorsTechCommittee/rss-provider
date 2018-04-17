@@ -7,8 +7,7 @@ function onLoad() {
 }
 
 function deleteItem(guid) {
-    fetch('/delete', {
+    fetch('/delete/' + guid, {
         method: 'POST',
-        body: guid,
     });
 }
