@@ -27,10 +27,13 @@ var feed = new RSS({
         rssxml = feed.xml();
     }
 
-
     app.use(cors());
     app.get('/', pageServer);
     app.use('/', express.static(path.join(__dirname, '..', 'client')));
+    app.use(bodyParser.json());
+    app.use(bodyParser.urlencoded({
+        extended: true
+    }));
     app.post('/add', feedHandler);
     app.post('/delete/:id', deleter);
     app.get('/feed.rss', (req, res) => {
