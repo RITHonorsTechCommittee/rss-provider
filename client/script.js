@@ -6,7 +6,7 @@ function onLoad() {
     document.getElementById('date').value = `${newDate.getFullYear()}-${('00' + (newDate.getMonth() + 1)).slice(-2)}-${('00' + newDate.getDate()).slice(-2)}`;
 }
 
-function deleteItem(guid) {
+function deleteItem(element, guid) {
     fetch('/delete/' + guid, {
         method: 'POST',
     });

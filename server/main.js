@@ -64,7 +64,10 @@ function feedHandler(req, res) {
 }
 
 function deleter(req, res) {
-    db.delete_item(req.params.id);
+	id = req.params.id;
+    db.delete_item(id);
+	rssjson = rssjson.filter(item => item._id != id);
+	console.log(rssjson);
     res.redirect('/');
 }
 
