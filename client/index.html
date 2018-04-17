@@ -1,30 +1,34 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Add RSS</title>
-    <script type="text/javascript" src="/script.js"></script>
+    <script src="/script.js"></script>
     <link rel="stylesheet" href="/style.css" type="text/css">
     <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
 </head>
-
-<body>
-    <form class="pure-form pure-form-stacked" action="/" method="POST">
+<body class="pure-g">
+    <form class="pure-u-1-2 content-column pure-form pure-form-stacked" action="/add" method="POST">
         <fieldset>
             <legend>Add RSS Item</legend>
             <label for="title">Title</label>
-            <input id="title" name="title" type="text" placeholder="title">
+            <input id="title" name="title" type="text" placeholder="title" required />
+			<label for="author">Author</label>
+            <input id="author" name="author" type="text" placeholder="author" required />
             <label for="description">Description</label>
-            <input id="description" name="description" type="text" placeholder="description">
+            <textarea id="description" name="description" placeholder="description" required></textarea>
             <label for="date">Expiration date</label>
-            <input id="date" name="date" type="date" placeholder="date">
-            <label for="password">Password</label>
-            <input id="password" name="password" type="password" placeholder="password">
+            <input id="date" name="date" type="date" required />
             <button type="submit" class="pure-button pure-button-primary">Submit</button>
         </fieldset>
     </form>
+    <div id="rss-item-list" class="pure-u-1-2 content-column">
+        {{#items}}
+        <div id="{{_id}}" class="rss-item">
+            <button class="delete-button pure-button" onclick="deleteItem('{{_id}}')">×</button> {{title}}
+        </div>
+        {{/items}}
+    </div>
 </body>
-
 </html>

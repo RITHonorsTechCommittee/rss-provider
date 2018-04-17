@@ -6,6 +6,8 @@ const crypto = require('crypto');
 const fs = require('fs');
 const RSS = require('rss');
 const cors = require('cors');
+const db = require('./db.js');
+const Mustache = require('mustache');
 
 var rssxml;
 var rssjson = [];
@@ -16,70 +18,86 @@ var feed = new RSS({
     site_url: 'http://localhost:3000',
 });
 
-try {
-    oldRSS = require('./rss.json');
-    addAllItems(oldRSS);
-} catch (err) {
-    console.log(err);
-    writeJSON();
-    rssxml = feed.xml();
+(async () => {
+    try {
+        addAllItems(await db.select_all());
+    } catch (err) {
+        console.log(err);
+        //writeJSON();
+        rssxml = feed.xml();
+    }
+
+    app.use(cors());
+    app.get('/', pageServer);
+    app.use('/', express.static(path.join(__dirname, '..', 'client')));
+    app.use(bodyParser.json());
+    app.use(bodyParser.urlencoded({
+        extended: true
+    }));
+    app.post('/add', feedHandler);
+    app.post('/delete/:id', deleter);
+    app.get('/feed.rss', (req, res) => {
+        res.end(rssxml);
+    });
+    /*app.get('/feed.json', (req, res) => {
+        res.json(rssjson);
+    });*/
+
+    app.listen(3000, () => {
+        console.log('listening at http://localhost:3000');
+    });
+})();
+
+function pageServer(req, res) {
+    fs.readFile(path.join(__dirname, '..', 'client', 'index.html'), 'utf8', (err, data) => {
+        if (err) {
+            console.error(err);
+            return;
+        }
+        res.end(Mustache.render(data, { items: rssjson }));
+    });
 }
 
-app.use(cors());
-app.use('/', express.static(path.join(__dirname, 'public')));
-app.use(bodyParser.urlencoded({
-    extended: false
-}));
-app.post('/', feedHandler);
-app.get('/feed.rss', (req, res) => {
-    res.end(rssxml);
-});
-app.get('/feed.json', (req, res) => {
-    res.json(rssjson);
-});
-
-app.listen(3000, () => {
-    console.log('listening at http://localhost:3000');
-});
-
 function feedHandler(req, res) {
-    addRSS(req.body.title, req.body.description, req.body.date);
+    addRSS(req.body.title, req.body.author, req.body.description, req.body.date);
     res.redirect('/');
 }
 
-function addRSS(title, description, expirationDate) {
+function deleter(req, res) {
+	id = req.params.id;
+    db.delete_item(id);
+	rssjson = rssjson.filter(item => item._id != id);
+	console.log(rssjson);
+    res.redirect('/');
+}
+
+function addRSS(title, author, description, expirationDate) {
     var item = {
         title,
         description,
         date: Date.now(),
         expirationDate,
         url: '',
-        guid: uuidv4(),
+		author: author,
     }
     addRSSItem(item);
 }
 
 function addRSSItem(item) {
-    addAllItems([item]);
+    console.log('pushing ' + JSON.stringify(item));
+    db.insert(item);
+	rssjson.push(item)
+	feed.item(item);
 }
 
 function addAllItems(items) {
     console.log('addall ' + items);
     for(item of items) {
-        console.log('pushing ' + JSON.stringify(item));
-        rssjson.push(item);
+		rssjson.push(item)
         feed.item(item);
     }
     rssxml = feed.xml();
-    writeJSON();
-}
-
-function uuidv4() { // https://stackoverflow.com/a/2117523/2846923
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-        var r = Math.random() * 16 | 0,
-            v = c == 'x' ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
-    });
+    //writeJSON();
 }
 
 function writeJSON() {
