@@ -1,6 +1,6 @@
 var MongoClient = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectId; 
-var url = "mongodb://localhost:27017/";
+var url = process.env.MONGODB_URI || "mongodb://localhost:27017/";
 var db_name = "RssFeed";
 var collection_name = "RssData";
 
