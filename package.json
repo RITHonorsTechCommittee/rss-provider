@@ -2,18 +2,33 @@
   "name": "rss-host",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "./server/main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node ./server/main.js",
+    "dev": "./node_modules/.bin/nodemon ./main.js",
+    "pretest": "eslint ./src --fix",
+    "test": "echo \"Tests done.\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RITHonorsTechCommittee/rss-provider.git"
   },
   "author": "RTC",
-  "license": "UNLICENSED",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/RITHonorsTechCommittee/rss-provider/issues"
+  },
+  "homepage": "https://github.com/RITHonorsTechCommittee/rss-provider#readme",
   "dependencies": {
     "body-parser": "^1.18.2",
     "cors": "^2.8.4",
+    "eslint": "^4.17.0",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-plugin-import": "^2.8.0",
     "express": "^4.16.2",
+    "mongodb": "^3.0.4",
     "mustache": "^2.3.0",
+    "nodemon": "^1.14.12",
     "rss": "^1.2.2"
   }
 }
