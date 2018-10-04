@@ -9,7 +9,7 @@ exports.insert = function (item) {
 	MongoClient.connect(url, function(err, db) {
 		if (err) throw err;
 		var dbo = db.db(db_name); // Opens database
-		var myobj = { title: item.title, link: item.url, description: item.description, author: item.author, pubDate: new Date(item.date), expirationDate: new Date(item.expirationDate) }; // Defines new object
+		var myobj = { title: item.title, link: item.url, description: item.description, author: item.author, date: new Date(item.date), expirationDate: new Date(item.expirationDate) }; // Defines new object
 		dbo.collection(collection_name).insertOne(myobj, function(err, res) { // Inserts the given object
 			if (err) throw err;
 			console.log("1 document inserted");
