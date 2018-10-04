@@ -88,6 +88,7 @@ function addRSSItem(item) {
     db.insert(item);
 	rssjson.push(item)
 	feed.item(item);
+	rssxml = feed.xml();
 }
 
 function addAllItems(items) {
